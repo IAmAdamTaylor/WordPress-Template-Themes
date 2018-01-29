@@ -1,0 +1,11 @@
+{
+  "presets": [[
+  	"env", 
+  	{
+      "targets": {
+        "browsers": ["last 2 versions", "> 5%", "IE 9", "IE 10", "IE 11"]
+      },
+      "modules": false
+	  }
+  ]]
+}
