@@ -5,6 +5,48 @@
  */
 
 /**
+ * Get the file path for an asset inside the theme.
+ * Checks for the assets existence within the child theme first,
+ * and falls back to the base theme if that doesn't exist.
+ * @param  string $path The path to the asset relative to the theme directory.
+ * @return string|boolean The path to the asset if it exists, or false.
+ */
+function get_asset_path( $path ) {
+	if ( child_has_asset( $path ) ) {
+		$dir = get_stylesheet_directory();
+	} else {
+		$dir = get_template_directory();
+	}
+
+	$dir = trailingslashit( $dir );
+
+	/**
+	 * Filter the asset path directory.
+	 * @param  string $dir  The directory path.
+	 * @param  string $path The file path that was passed,
+	 * @return string 		  The new path for the directory.
+	 */
+	$dir = apply_filters( 'get_asset_path_directory', $dir, $path );
+
+	// Using a leading underscore on the variable name 
+	// to keep reference to original as well
+	$_path = $dir . $path;
+
+	// Check that asset exists, return false if it doesn't
+	if ( !file_exists( $_path ) || !is_readable( $_path ) ) {
+		return false;
+	}
+
+	/**
+	 * Filter the found asset path.
+	 * @param  string $_path The full asset path.
+	 * @param  string $path  The original passed asset path (without the directory).
+	 * @return string 			 The new path for the asset.
+	 */
+	return apply_filters( 'get_asset_path', $_path, $path );
+}
+
+/**
  * Get the URI for an asset inside the theme.
  * Checks for the assets existence within the child theme first,
  * and falls back to the base theme if that doesn't exist.
@@ -47,45 +89,15 @@ function get_asset_uri( $path ) {
 }
 
 /**
- * Get the file path for an asset inside the theme.
- * Checks for the assets existence within the child theme first,
- * and falls back to the base theme if that doesn't exist.
+ * Include an asset file into the document.
  * @param  string $path The path to the asset relative to the theme directory.
- * @return string|boolean The path to the asset if it exists, or false.
  */
-function get_asset_path( $path ) {
-	if ( child_has_asset( $path ) ) {
-		$dir = get_stylesheet_directory();
-	} else {
-		$dir = get_template_directory();
+function include_asset( $path ) {
+	$path = get_asset_path( $path );
+
+	if ( $path ) {
+		include $path;
 	}
-
-	$dir = trailingslashit( $dir );
-
-	/**
-	 * Filter the asset path directory.
-	 * @param  string $dir  The directory path.
-	 * @param  string $path The file path that was passed,
-	 * @return string 		  The new path for the directory.
-	 */
-	$dir = apply_filters( 'get_asset_path_directory', $dir, $path );
-
-	// Using a leading underscore on the variable name 
-	// to keep reference to original as well
-	$_path = $dir . $path;
-
-	// Check that asset exists, return false if it doesn't
-	if ( !file_exists( $_path ) || !is_readable( $_path ) ) {
-		return false;
-	}
-
-	/**
-	 * Filter the found asset path.
-	 * @param  string $_path The full asset path.
-	 * @param  string $path  The original passed asset path (without the directory).
-	 * @return string 			 The new path for the asset.
-	 */
-	return apply_filters( 'get_asset_path', $_path, $path );
 }
 
 /**
