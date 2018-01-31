@@ -6,10 +6,10 @@
 
 ?><!DOCTYPE html>
 <!--[if IE 9]>
-<html class="<?php html_class( 'is-ie is-ie-9' ); ?>" <?php language_attributes(); ?>>
+<html <?php html_class( 'is-ie is-ie-9' ); ?> <?php language_attributes(); ?>>
 <![endif]-->
 <!--[if !(IE 9) ]><!-->
-<html class="<?php html_class(); ?>" <?php language_attributes(); ?>>
+<html <?php html_class(); ?> <?php language_attributes(); ?>>
 <!--<![endif]-->
 <head>
   <title><?php trim(wp_title('')); ?></title>
