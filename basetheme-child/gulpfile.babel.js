@@ -239,7 +239,7 @@ gulp.task( 'watch', ( done ) => {
     gutil.log( error.toString() );
   } );
 
-  gulp.watch( "../**/*.php", ['server-reload'] ).on( 'error', (error) => {
+  gulp.watch( "**/*.php", {cwd: '../'}, ['server-reload'] ).on( 'error', (error) => {
     gutil.log( error.toString() );
   } );
 
