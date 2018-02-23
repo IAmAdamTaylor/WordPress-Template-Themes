@@ -94,5 +94,6 @@ function get_derived_template_part( $slug, $name = null, $params = array() ) {
 
   $templates[] = "{$slug}.php";
 
-  locate_template($templates, true, false);
+  $template = locate_template($templates);
+  require $template;
 }
