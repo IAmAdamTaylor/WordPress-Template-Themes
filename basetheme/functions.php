@@ -52,7 +52,7 @@ function get_post_by_slug( $slug, $post_type = 'post' ) {
  * @param  array  $params An array of variables that will be available in the template part.
  *                        The array keys will become variable names.
  */
-function get_derived_template_part( $slug, $name = null, $params = array() ) {
+function get_contextual_template_part( $slug, $name = null, $params = array() ) {
 	// Unpack the params for our custom function
 	if ( count( $params ) > 0 ) {
 		/**
@@ -65,8 +65,8 @@ function get_derived_template_part( $slug, $name = null, $params = array() ) {
 	   * @param string      $slug   The slug name for the generic template.
 	   * @param string|null $name   The name of the specialized template.
 	   */
-	  $params = apply_filters( "get_derived_template_part_params", $params, $slug, $name );
-	  $params = apply_filters( "get_derived_template_part_params_{$slug}", $params, $slug, $name );
+	  $params = apply_filters( "get_contextual_template_part_params", $params, $slug, $name );
+	  $params = apply_filters( "get_contextual_template_part_params_{$slug}", $params, $slug, $name );
 
 		extract( $params );
 	}
