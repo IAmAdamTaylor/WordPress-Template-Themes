@@ -27,7 +27,26 @@ function basetheme_setup_theme() {
 }
 
 /**
- * Gets a template part allowing use of variables from the calling context.
+ * Get a post with a specific slug.
+ * @param  string  $slug      A slug compatible string (lowercase, no spaces).
+ * @param  string  $post_type A valid post type, post, page or a custom type.
+ * @return WP_Post 						A post object if it exists, null otherwise.
+ */
+function get_post_by_slug( $slug, $post_type = 'post' ) {
+	$args = array(
+	  'name'   => $slug,
+	  'post_type'   => $post_type,
+	  'post_status' => 'publish',
+	  'numberposts' => 1
+	);
+
+	$posts = get_posts( $args );
+
+	return $posts ? reset( $posts ) : null;
+}
+
+/**
+ * Gets a template part and allows passing of variables from the calling context.
  * @param  string $slug   The slug name for the generic template.
  * @param  string $name   Optional. The name of the specialised template.
  * @param  array  $params An array of variables that will be available in the template part.
