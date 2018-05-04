@@ -131,7 +131,8 @@ gulp.task( 'styles', () => {
  *     Sourcemap for each minified file created
  */
 gulp.task( 'scripts', () => {
-  let promises = [];
+  let promises = [],
+      taskPromise;
 
   getFolders( globs.scripts.in ).map( function( folder ) {
 
@@ -139,7 +140,6 @@ gulp.task( 'scripts', () => {
     let _promise = new Promise( (resolve, reject) => {
 
       gulp.src( path.join( globs.scripts.in, folder, '/*.js' ) )
-        .on( 'end', resolve )
         .pipe( jshint( { esversion: 6 } ) )
         .pipe( jshint.reporter('default') )
         .pipe( sourcemaps.init() )
@@ -151,6 +151,7 @@ gulp.task( 'scripts', () => {
         .pipe( gulp.dest( globs.scripts.out ) )
         .pipe( sourcemaps.write('maps') )
         .pipe( gulp.dest( globs.scripts.out ) )
+        .on( 'end', resolve )
         .pipe( notify( { message: 'Scripts task [' + folder + '] complete', onLast: true } ) );
 
     } );
@@ -159,11 +160,13 @@ gulp.task( 'scripts', () => {
 
   } );
 
-  Promise.all( promises ).then( () => {
+  taskPromise = Promise.all( promises );
+
+  taskPromise.then( () => {
     browserSync.reload();
   } );
 
-  return Promise.all( promises );
+  return taskPromise;
 } );
 
 /**
@@ -250,7 +253,7 @@ gulp.task( 'watch', ( done ) => {
  * Builds all of the assets of the site.
  */
 gulp.task( 'build', ( done ) => {
-  runSequence( [ 'styles', 'scripts', 'images' ], done );
+  runSequence( ['styles', 'scripts', 'images'], done );
 } );
 
 /**
@@ -283,7 +286,7 @@ gulp.task( 'local', ( done ) => {
 gulp.task( 'staging', ( done ) => {
   argv.env = 'development';
 
-  runSequence( 'clean', 'build', done );
+  runSequence( 'clean', 'build', 'production-ready', done );
 } );
 
 /**
