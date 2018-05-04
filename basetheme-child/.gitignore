@@ -6,6 +6,7 @@
 *.bak
 *.sql
 .tweetcache
+node_modules
 
 # Ignore generated files
 .sass-cache
