@@ -56,16 +56,57 @@ class WP_Image {
 
   /**
    * Get the set of attributes required to show this image on an <img> tag.
+   * @param string|array $srcset Any other sizes to get as well the base size.
+   *                             These sizes will be added as srcset URIs.
+   * @param string|array $sizes  The sizes attribute to place on the image.
    * @return string
    */
-  public function getAttributes() {
-    return sprintf(
-      'src="%s" alt="%s" width="%s" height="%s"',
-      $this->src,
-      $this->alt,
-      $this->width,
-      $this->height
-    );
+  public function getAttributes( $srcset = array(), $sizes = array() ) {
+    // Convert strings into valid array formats
+    if ( is_string( $srcset ) && strpos( $srcset, "," ) ) {
+      $srcset = explode( ",", $srcset );
+    }
+    if ( is_string( $sizes ) && strpos( $sizes, "," ) ) {
+      $sizes = explode( ",", $sizes );
+    }
+    
+    if ( !empty( $srcset ) && !is_array( $srcset ) ) {
+      $srcset = array( $srcset );
+    }
+    if ( !empty( $sizes ) && !is_array( $sizes ) ) {
+      $sizes = array( $sizes );
+    }
+
+    if ( empty( $srcset ) || empty( $sizes ) ) {
+      // Without both parts, the srcset will not work
+      return sprintf(
+        'src="%s" alt="%s" width="%s" height="%s"',
+        $this->src,
+        $this->alt,
+        $this->width,
+        $this->height
+      );
+    } else {
+      // If we have both, build a srcset and sizes attribute
+      array_unshift( $srcset, $this->_size );
+
+      foreach ($srcset as $key => &$value) {
+        $srcsetImageObject = wp_get_attachment_image_src( $this->ID, trim( $value ) );
+        $value = $srcsetImageObject[0] . ' ' . $srcsetImageObject[1] . 'w';
+
+        unset( $value );
+      }
+
+      return sprintf(
+        'src="%s" srcset="%s" sizes="%s" alt="%s" width="%s" height="%s"',
+        $this->src,
+        implode( ',', $srcset ),
+        implode( ',', $sizes ),
+        $this->alt,
+        $this->width,
+        $this->height
+      );
+    }
   }
 
   /**
@@ -85,13 +126,13 @@ class WP_Image {
   public function setSize( $size ) {
     $this->_size = $size;
 
-    $image_object = wp_get_attachment_image_src( $this->ID, $this->_size );
+    $imageObject = wp_get_attachment_image_src( $this->ID, $this->_size );
 
-    if ( $image_object ) {
-      $this->src = $image_object[0];
+    if ( $imageObject ) {
+      $this->src = $imageObject[0];
       $this->alt = get_post_meta( $this->ID, '_wp_attachment_image_alt', true );
-      $this->width = $image_object[1];
-      $this->height = $image_object[2];
+      $this->width = $imageObject[1];
+      $this->height = $imageObject[2];
     } else {
       $this->src = '';
       $this->alt = '';
