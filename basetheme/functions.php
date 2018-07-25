@@ -33,6 +33,10 @@ function basetheme_setup_theme() {
  * @return WP_Post 						A post object if it exists, null otherwise.
  */
 function get_post_by_slug( $slug, $post_type = 'post' ) {
+	if ( !$slug ) {
+		return null;
+	}
+	
 	$args = array(
 	  'name'   => $slug,
 	  'post_type'   => $post_type,
