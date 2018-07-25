@@ -17,7 +17,7 @@ get_header();
 	<div class="container">
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?> >
 							
-			<h2 class="title"><?php echo get_the_title(); ?></h2>
+			<h2><?php echo get_the_title(); ?></h2>
 			<div class="s-flow-content">
 				<?php the_content(); ?>
 			</div>

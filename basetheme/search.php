@@ -15,7 +15,7 @@ get_header();
 	<article>
 		
 		<header class="">
-			<h2 class=""><?php printf( __( 'Search Results for: %s', 'basetheme' ), '<span class="search-term">' . get_search_query() . '</span>' ); ?></h2>
+			<h2><?php printf( __( 'Search Results for: %s', 'basetheme' ), '<span class="search-term">' . get_search_query() . '</span>' ); ?></h2>
 		</header>
 
 		<?php if ( have_posts() ): ?>
@@ -46,8 +46,8 @@ get_header();
 
 			<article id="post-empty" class="post no-results not-found">
 					
-			<h2 class="title"><?php _e( 'Nothing Found', 'edge-template' ); ?></h2>
-			<p><?php _e( 'Sorry, but nothing matched your search criteria. Please try again with some different keywords.', 'edge-template' ); ?></p>
+			<h2><?php _e( 'Nothing Found', 'basetheme' ); ?></h2>
+			<p><?php _e( 'Sorry, but nothing matched your search criteria. Please try again with some different keywords.', 'basetheme' ); ?></p>
 
 		</article><!-- #post-empty -->
 			<?php get_search_form(); ?>
