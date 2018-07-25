@@ -101,3 +101,20 @@ function get_contextual_template_part( $slug, $name = null, $params = array() ) 
   $template = locate_template($templates);
   require $template;
 }
+
+/**
+ * Get the privacy policy permalink.
+ * If added through WordPress's new privacy menu, that will be returned with a string fallback if not.
+ * @return string 
+ */
+function get_privacy_page_permalink() {
+	$option = get_option( 'wp_page_for_privacy_policy' );
+
+	if ( $option ) {
+		$permalink = get_the_permalink( $option );
+	} else {
+		$permalink = home_url( '/privacy-terms/' );
+	}
+
+	return apply_filters( 'privacy_page_permalink', $permalink );
+}
